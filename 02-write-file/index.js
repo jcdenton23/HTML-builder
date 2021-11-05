@@ -16,7 +16,8 @@ rl.write(
 
 const close = () => {
   rl.write('До новых встреч!');
-  process.exit(0);
+  writeble.end();
+  rl.close();
 };
 
 rl.on('SIGINT', () => close());
