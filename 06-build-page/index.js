@@ -1,6 +1,6 @@
+const { createWriteStream, createReadStream } = require('fs');
 const { join, extname, parse } = require('path');
 const { readdir, mkdir, rmdir, copyFile } = require('fs/promises');
-const { createWriteStream, createReadStream } = require('fs');
 
 const bundlePath = join(__dirname, 'project-dist');
 const mainAssetsPath = join(__dirname, 'assets');
@@ -47,12 +47,10 @@ async function replaceHtmlTemplates() {
 
   readable.on('data', async (chunk) => {
     html = chunk;
-
     const files = await readdir(join(__dirname, 'components'), {
       withFileTypes: true,
     });
     const htmlFiles = files.filter((file) => extname(file.name) === '.html');
-
     htmlFiles.forEach((file, i) => {
       if (file.isFile()) {
         const readableFile = createReadStream(
@@ -78,3 +76,17 @@ async function startBuild() {
 }
 
 startBuild();
+
+/*
+ + После завершения работы скрипта должна быть создана папка project-dist
+ + В папке project-dist должны находиться файлы index.html и style.css
+ + В папке project-dist должна находиться папка assets являющаяся точной копией папки assets находящейся в 06-build-page
+ + Запрещается использование fsPromises.cp()
+ + Файл index.html должен содержать разметку являющуюся результатом замены шаблонных тегов в файле template.html
+ + Файл style.css должен содержать стили собранные из файлов папки styles
+ + При добавлении компонента в папку и соответствующего тега в исходный файл template.html повторное выполнение скрипта приведёт файл index.html в папке project-dist в актуальное состояние перезаписав его. Файл style.css и папка assets так же должны поддерживать актуальное состояние
+ + Исходный файл template.html не должен быть изменён в ходе выполнения скрипта
+ + Запись в шаблон содержимого любых файлов кроме файлов с расширением .html является ошибкой
+
+ Самопроверка: 50/50 баллов
+*/

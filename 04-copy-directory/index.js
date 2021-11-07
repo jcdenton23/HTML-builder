@@ -23,3 +23,11 @@ async function copyDirectory(mainLink, copyLink) {
 }
 
 copyDirectory(mainPath, copyPath);
+
+/*
+ + После завершения работы функции создаётся папка files-copy содержимое которой является точной копией исходной папки files.
+ + При добавлении/удалении/изменении файлов в папке files и повторном запуске node 04-copy-directory содержимое папки files-copy актуализируется.
+ + Запрещается использование fsPromises.cp()
+
+ Самопроверка: 20/20 баллов
+*/
