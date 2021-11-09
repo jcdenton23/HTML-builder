@@ -1,13 +1,13 @@
 const { createWriteStream, createReadStream } = require('fs');
 const { join, extname, parse } = require('path');
-const { readdir, mkdir, rmdir, copyFile } = require('fs/promises');
+const { readdir, mkdir, copyFile } = require('fs/promises');
+const fs = require('fs');
 
 const bundlePath = join(__dirname, 'project-dist');
 const mainAssetsPath = join(__dirname, 'assets');
 const copyAssetsPath = join(bundlePath, 'assets');
 
 async function createFolder(folder) {
-  await rmdir(folder, { recursive: true });
   await mkdir(folder, { recursive: true });
 }
 
@@ -68,14 +68,12 @@ async function replaceHtmlTemplates() {
   });
 }
 
-async function startBuild() {
+fs.rm(bundlePath, { recursive: true }, async () => {
   await createFolder(bundlePath);
   await mergeStyles(__dirname, 'styles');
   await copyDirectory(mainAssetsPath, copyAssetsPath);
   await replaceHtmlTemplates();
-}
-
-startBuild();
+});
 
 /*
  + После завершения работы скрипта должна быть создана папка project-dist
